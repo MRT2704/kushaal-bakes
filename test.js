@@ -20,11 +20,11 @@ function assert(condition, message) {
 
 // Expected prices from the flyer
 const EXPECTED_PRICES = {
-  'normal': { '½ kg': 250, '1 kg': 450, '2 kg': 650, '2 kg Steps Cake': 740 },
-  'cool': { '½ kg': 350, '1 kg': 650, '2 kg': 1250, '2 kg Steps Cake': 1400 },
+  'normal': { '½ kg': 250, '1 kg': 450, '2 kg': 650, '2 kg Steps (2-Layer)': 740 },
+  'cool': { '½ kg': 350, '1 kg': 650, '2 kg': 1250, '2 kg Steps (2-Layer)': 1400 },
   'redvelvet': { '½ kg': 500, '1 kg': 950 },
-  'normal-choco': { '½ kg': 200, '1 kg': 350, '2 kg': 690, '2 kg Steps Cake': 800 },
-  'cool-choco': { '½ kg': 400, '1 kg': 750, '2 kg': 1450, '2 kg Steps Cake': 1550 }
+  'normal-choco': { '½ kg': 200, '1 kg': 350, '2 kg': 690, '2 kg Steps (2-Layer)': 800 },
+  'cool-choco': { '½ kg': 400, '1 kg': 750, '2 kg': 1450, '2 kg Steps (2-Layer)': 1550 }
 };
 
 // Load cakes.json (the single source of truth)
@@ -65,7 +65,7 @@ for (const cake of cakes) {
 assert(totalPrices === 18, 'Total price points: ' + totalPrices + ' (expected 18)');
 assert(allPricesCorrect, 'All prices match flyer data');
 
-// ===== Test 4: Red Velvet only has 2 weights (no 2kg or Steps Cake) =====
+// ===== Test 4: Red Velvet only has 2 weights (no 2kg or Steps (2-Layer)) =====
 console.log('\n--- Weight Options ---');
 const rv = cakes.find(c => c.id === 'redvelvet');
 assert(rv.weights.length === 2, 'Red Velvet Cake has only 2 weights (no unlisted sizes)');

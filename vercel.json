@@ -1,0 +1,12 @@
+{
+  "github": {
+    "project": "MRT2704/kushaal-bakes",
+    "repo": "kushaal-bakes"
+  },
+  "builds": {
+    "/*": "/index.html"
+  },
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
