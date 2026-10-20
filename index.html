@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kushaal Home Made Bakes</title>
+  <meta name="description" content="Order fresh homemade cakes via WhatsApp. Normal Cake, Cool Cake, Red Velvet, and Chocolate Cakes. Bhimadole, West Godavari." />
+  <meta name="theme-color" content="#f8f4f0" />
+  <style>
+    :root {
+      --cream: #f8f4f0;
+      --berry-pink: #e87d8a;
+      --chocolate-brown: #5d4037;
+      --light-brown: #8d6e63;
+      --dark-pink: #c62828;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cream);
+      color: var(--chocolate-brown);
+      line-height: 1.5;
+    }
+    .header {
+      background: linear-gradient(135deg, var(--berry-pink), var(--dark-pink));
+      color: #fff;
+      text-align: center;
+      padding: 1.25rem 0.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+    .header h1 { font-size: 1.25rem; font-weight: 700; }
+    .header p { font-size: 0.8rem; opacity: 0.9; }
+    .container { max-width: 420px; margin: 0 auto; padding: 1rem 0.75rem 4rem; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .cake-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .cake-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 0.6rem;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: 2px solid var(--berry-pink);
+    }
+    .cake-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); }
+    .cake-card img { position: relative; width: 100%; height: 70px; object-fit: cover; border-radius: 6px; margin-bottom: 0.3rem; }
+    .cake-card h3 { font-size: 0.8rem; color: var(--chocolate-brown); font-weight: 600; }
+    .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .nav-bar .back-btn { background: transparent; border: none; color: var(--chocolate-brown); font-size: 1.25rem; cursor: pointer; }
+    .nav-bar .screen-title { font-size: 1rem; font-weight: 600; color: var(--chocolate-brown); margin: 0 auto; }
+    .cake-detail { text-align: center; margin-top: 1rem; }
+    .cake-detail img { position: relative; width: 100%; max-width: 200px; height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 0.75rem; border: 2px dashed var(--light-brown); }
+    .cake-detail h2 { font-size: 1.1rem; color: var(--chocolate-brown); margin-bottom: 0.5rem; }
+    .price-options { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.75rem; }
+    .price-btn {
+      background: var(--berry-pink); color: #fff; border: none; padding: 0.5rem;
+      border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .price-btn:hover { background: var(--dark-pink); }
+    .price-btn.selected { background: var(--chocolate-brown); color: var(--cream); }
+    .selected-price { margin-top: 0.75rem; padding: 0.5rem; background: #fff; border-radius: 8px; text-align: center; border: 1px solid var(--light-brown); }
+    .selected-price .label { color: var(--light-brown); font-size: 0.7rem; }
+    .selected-price .value { font-size: 1rem; font-weight: 700; color: var(--dark-pink); }
+    .btn-proceed {
+      background: var(--chocolate-brown); color: var(--cream); border: none;
+      padding: 0.6rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; margin-top: 0.75rem; display: none;
+    }
+    .btn-proceed.show { display: block; }
+    .order-summary { background: #fff; padding: 0.75rem; border-radius: 10px; margin-bottom: 1rem; box-shadow: var(--shadow); }
+    .order-summary .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.85rem; }
+    .order-summary .summary-row:last-child { border-top: 1px solid var(--light-brown); font-weight: 700; font-size: 0.95rem; margin-top: 0.25rem; padding-top: 0.25rem; }
+    .form-group { margin-bottom: 0.6rem; }
+    .form-group label { display: block; font-size: 0.75rem; color: var(--light-brown); margin-bottom: 0.2rem; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 0.5rem; border: 1px solid var(--light-brown);
+      border-radius: 8px; font-size: 0.85rem; background: #fff;
+    }
+    .form-group textarea { min-height: 60px; resize: vertical; }
+    .radio-group { display: flex; gap: 0.5rem; margin-top: 0.2rem; }
+    .radio-option { flex: 1; text-align: center; }
+    .radio-option input { display: none; }
+    .radio-option label {
+      display: block; padding: 0.5rem; background: #fff;
+      border: 1px solid var(--light-brown); border-radius: 8px;
+      cursor: pointer; font-size: 0.85rem;
+    }
+    .radio-option input:checked + label { background: var(--berry-pink); color: #fff; }
+    .btn-submit {
+      background: var(--dark-pink); color: #fff; border: none; padding: 0.6rem 1rem;
+      border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      width: 100%; margin-top: 0.5rem; display: flex; align-items: center;
+      justify-content: center; gap: 0.4rem;
+    }
+    .btn-submit:hover { background: var(--chocolate-brown); }
+    .footer { text-align: center; padding: 1rem 0.75rem; border-top: 1px solid var(--light-brown); margin-top: 1rem; }
+    .footer .bakery-name { font-weight: 700; font-size: 0.9rem; color: var(--chocolate-brown); margin-bottom: 0.25rem; }
+    .footer .bakery-address { font-size: 0.75rem; color: var(--light-brown); margin-bottom: 0.4rem; }
+    .contact-links { display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
+    .call-btn, .whatsapp-btn {
+      display: inline-block; padding: 0.35rem 0.7rem; border-radius: 6px;
+      font-size: 0.75rem; font-weight: 600; text-decoration: none; transition: opacity 0.15s;
+    }
+    .call-btn { background: var(--chocolate-brown); color: var(--cream); }
+    .whatsapp-btn { background: #25d36f; color: #fff; }
+    .call-btn:hover, .whatsapp-btn:hover { opacity: 0.85; }
+    .cake-card img::after {
+      content: "Illustrative";
+      position: absolute; top: 2px; right: 2px;
+      background: var(--light-brown); color: #fff;
+      font-size: 0.6rem; padding: 2px 4px; border-radius: 4px;
+    }
+    .cake-detail img::after {
+      content: "Illustrative";
+      position: absolute; top: 4px; right: 4px;
+      background: var(--light-brown); color: #fff;
+      font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
+    }
+    .form-hint { font-size: 0.7rem; color: var(--light-brown); margin-top: 0.15rem; }
+    @media (max-width: 480px) {
+      .header h1 { font-size: 1.15rem; }
+      .container { padding: 0.75rem 0.5rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1 id="bakery-name">Kushaal Home Made Bakes</h1>
+    <p id="bakery-tagline">Homemade with love, fresh for your special moments</p>
+  </header>
+
+  <main class="container">
+    <section id="home-screen" class="screen active">
+      <p style="text-align: center; margin-bottom: 0.75rem;">Pick a cake and order via WhatsApp — no app needed!</p>
+      <div class="cake-grid" id="cake-grid" role="list">
+        <p style="text-align: center; color: var(--light-brown); grid-column: 1 / -1;">Loading cakes...</p>
+      </div>
+    </section>
+
+    <section id="menu-screen" class="screen">
+      <div class="nav-bar">
+        <button type="button" class="back-btn" onclick="showScreen('home-screen')" aria-label="Back to cakes">&#8592;</button>
+        <span class="screen-title">Select Weight</span>
+        <div style="width: 24px;"></div>
+      </div>
+      <div class="cake-detail">
+        <img id="cake-image" src="assets/normal-cake.png" alt="Cake - illustrative image" loading="lazy" />
+        <h2 id="cake-name">Cake Name</h2>
+        <div class="price-options" id="price-options" role="group" aria-label="Weight options">
+        </div>
+        <div class="selected-price" id="selected-price-display" style="display: none;">
+          <div class="label">Selected Price</div>
+          <div class="value" id="selected-price-value">Rs. 0</div>
+        </div>
+        <button type="button" class="btn-proceed" id="proceed-btn" onclick="goToSummary()">Proceed to Order</button>
+      </div>
+    </section>
+
+    <section id="summary-screen" class="screen">
+      <div class="nav-bar">
+        <button type="button" class="back-btn" onclick="showScreen('home-screen')" aria-label="Back to cakes">&#8592;</button>
+        <span class="screen-title">Your Order</span>
+        <div style="width: 24px;"></div>
+      </div>
+      <div class="order-summary" id="order-summary" aria-label="Order summary">
+      </div>
+      <form id="order-form">
+        <div class="form-group">
+          <label for="customer-name">Your Name *</label>
+          <input type="text" id="customer-name" required aria-required="true" />
+        </div>
+        <div class="form-group">
+          <label for="order-date">Required Date *</label>
+          <input type="date" id="order-date" required aria-required="true" />
+          <div class="form-hint">E.g. 25 Oct 2026</div>
+        </div>
+        <div class="form-group">
+          <label for="order-time">Preferred Time *</label>
+          <input type="time" id="order-time" required aria-required="true" />
+        </div>
+        <div class="form-group">
+          <span>Fulfillment Method *</span>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="fulfillment-pickup" name="fulfillment" value="pickup" required />
+              <label for="fulfillment-pickup">Pickup</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="fulfillment-delivery" name="fulfillment" value="delivery" />
+              <label for="fulfillment-delivery">Delivery</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" id="address-group" style="display: none;">
+          <label for="delivery-address">Delivery Address</label>
+          <input type="text" id="delivery-address" placeholder="Full delivery address" />
+        </div>
+        <div class="form-group">
+          <label for="order-message">Special Message / Instructions</label>
+          <textarea id="order-message" placeholder="Allergies, decorations, special requests..."></textarea>
+        </div>
+        <button type="button" class="btn-submit" id="wa-submit-btn" onclick="sendWhatsApp()">
+          Order via WhatsApp
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="bakery-name" id="bakery-name-contact">Kushaal Home Made Bakes</div>
+    <div class="bakery-address" id="bakery-address">Bhimadole, West Godavari, Andhra Pradesh 534425</div>
+    <div class="contact-links">
+      <a href="tel:+918074117710" class="call-btn" id="phone-link-1">Call</a>
+      <a href="tel:+919391523823" class="call-btn" id="phone-link-2" style="display: none;">Call</a>
+      <a href="#" class="whatsapp-btn" id="whatsapp-link" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </div>
+  </footer>
+
+  <script>
+    let BAKERY = {};
+    let cakes = [];
+    let currentCake = null;
+    let selectedWeight = null;
+
+    async function init() {
+      try {
+        const response = await fetch('cakes.json');
+        const data = await response.json();
+        BAKERY = data.bakery;
+        cakes = data.cakes;
+      } catch (e) {
+        console.error('Failed to load cakes.json:', e);
+        document.getElementById('cake-grid').innerHTML =
+          '<p style="color: red; grid-column: 1 / -1;">Failed to load cakes. Please refresh the page.</p>';
+        return;
+      }
+
+      // Populate header
+      document.getElementById('bakery-name').textContent = BAKERY.name;
+      document.getElementById('bakery-tagline').textContent = BAKERY.tagline;
+
+      // Populate contact section (no redacted phone numbers)
+      document.getElementById('bakery-name-contact').textContent = BAKERY.name;
+      document.getElementById('bakery-address').textContent = BAKERY.address;
+      document.getElementById('phone-link-1').href = BAKERY.phone1.href;
+      document.getElementById('phone-link-1').textContent = '\u260E ' + BAKERY.phone1.display;
+      document.getElementById('phone-link-2').href = BAKERY.phone2.href;
+      document.getElementById('phone-link-2').textContent = '\u260E ' + BAKERY.phone2.display;
+      document.getElementById('phone-link-2').style.display = 'inline-block';
+      document.getElementById('whatsapp-link').href = 'https://wa.me/' + BAKERY.whatsappNumber;
+
+      renderCakes();
+    }
+
+    function renderCakes() {
+      const grid = document.getElementById('cake-grid');
+      grid.innerHTML = '';
+      cakes.forEach(cake => {
+        const card = document.createElement('div');
+        card.className = 'cake-card';
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.innerHTML =
+          '<div style="position: relative;">' +
+          '<img src="' + cake.image + '" alt="' + cake.name + ' - illustrative image" loading="lazy" style="width: 100%; height: 70px; object-fit: cover; border-radius: 6px;" />' +
+          '</div>' +
+          '<h3>' + cake.name + '</h3>';
+        card.addEventListener('click', function () { selectCake(cake); });
+        card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') selectCake(cake); });
+        grid.appendChild(card);
+      });
+    }
+
+    function selectCake(cake) {
+      currentCake = cake;
+      selectedWeight = null;
+      document.getElementById('cake-name').textContent = cake.name;
+      document.getElementById('cake-image').src = cake.image;
+      document.getElementById('cake-image').alt = cake.name + ' - illustrative image';
+
+      const options = document.getElementById('price-options');
+      options.innerHTML = '';
+      cake.weights.forEach(weight => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'price-btn';
+        btn.textContent = weight.label + ' \u2014 Rs.' + weight.price;
+        btn.addEventListener('click', function () { selectWeight(weight, this); });
+        options.appendChild(btn);
+      });
+
+      document.getElementById('selected-price-display').style.display = 'none';
+      document.getElementById('proceed-btn').classList.remove('show');
+    }
+
+    function selectWeight(weight, btn) {
+      selectedWeight = weight;
+      const btns = btn.parentElement.querySelectorAll('.price-btn');
+      btns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      document.getElementById('selected-price-value').textContent = 'Rs. ' + weight.price;
+      document.getElementById('selected-price-display').style.display = 'block';
+      document.getElementById('proceed-btn').classList.add('show');
+    }
+
+    function goToSummary() {
+      const summary = document.getElementById('order-summary');
+      summary.innerHTML =
+        '<div class="summary-row"><span>Cake</span> <span>' + currentCake.name + '</span></div>' +
+        '<div class="summary-row"><span>Weight</span> <span>' + selectedWeight.label + '</span></div>' +
+        '<div class="summary-row"><span>Price</span> <span>\u20B9' + selectedWeight.price + '</span></div>';
+      showScreen('summary-screen');
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    function sendWhatsApp() {
+      const name = document.getElementById('customer-name').value.trim();
+      const date = document.getElementById('order-date').value;
+      const time = document.getElementById('order-time').value;
+      const message = document.getElementById('order-message').value.trim();
+      const fulfillment = document.querySelector('input[name="fulfillment"]:checked');
+      const address = document.getElementById('delivery-address').value.trim();
+
+      if (!name || !date || !time || !fulfillment || !selectedWeight || !currentCake) {
+        alert('Please fill in all required fields and select a cake + weight.');
+        return;
+      }
+
+      const formattedDate = formatDate(date);
+
+      let msg = '\uD83D\uDCE6 *Kushaal Home Made Bakes - Order Request*\n\n';
+      msg += '*Cake:* ' + currentCake.name + '\n';
+      msg += '*Weight:* ' + selectedWeight.label + '\n';
+      msg += '*Price:* \u20B9' + selectedWeight.price + '\n\n';
+      msg += '*Name:* ' + name + '\n';
+      msg += '*Required:* ' + formattedDate + ' at ' + time + '\n';
+      msg += '*Method:* ' + (fulfillment.value === 'pickup' ? 'Pickup' : 'Delivery') + '\n';
+      if (fulfillment.value === 'delivery' && address) {
+        msg += '*Address:* ' + address + '\n';
+      }
+      if (message) {
+        msg += '*Message/Instructions:* ' + message + '\n';
+      }
+      msg += '\n_The bakery will confirm availability, any delivery charges, and final total._';
+
+      const url = 'https://wa.me/' + BAKERY.whatsappNumber + '?text=' + encodeURIComponent(msg);
+      window.location.href = url;
+    }
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const pickup = document.getElementById('fulfillment-pickup');
+      const delivery = document.getElementById('fulfillment-delivery');
+      const addressGroup = document.getElementById('address-group');
+
+      if (pickup) {
+        pickup.addEventListener('change', function () {
+          addressGroup.style.display = 'none';
+          document.getElementById('delivery-address').value = '';
+        });
+      }
+      if (delivery) {
+        delivery.addEventListener('change', function () {
+          addressGroup.style.display = 'block';
+        });
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+{
+  "bakery": {
+    "name": "Kushaal Home Made Bakes",
+    "tagline": "Homemade with love, fresh for your special moments",
+    "address": "Bhimadole, West Godavari, Andhra Pradesh 534425",
+    "whatsappNumber": "918074117710",
+    "whatsappDisplay": "+91 8074117710",
+    "phone1": {
+      "display": "+91 8074117710",
+      "href": "tel:+918074117710"
+    },
+    "phone2": {
+      "display": "+91 9391523823",
+      "href": "tel:+919391523823"
+    }
+  },
+  "cakes": [
+    {
+      "id": "normal",
+      "name": "Normal Cake",
+      "image": "assets/normal-cake.png",
+      "weights": [
+        {"label": "½ kg", "price": 250},
+        {"label": "1 kg", "price": 450},
+        {"label": "2 kg", "price": 650},
+        {"label": "2 kg Steps Cake", "price": 740}
+      ],
+      "illustrative": true
+    },
+    {
+      "id": "cool",
+      "name": "Cool Cake",
+      "image": "assets/cool-cake.png",
+      "weights": [
+        {"label": "½ kg", "price": 350},
+        {"label": "1 kg", "price": 650},
+        {"label": "2 kg", "price": 1250},
+        {"label": "2 kg Steps Cake", "price": 1400}
+      ],
+      "illustrative": true
+    },
+    {
+      "id": "redvelvet",
+      "name": "Red Velvet Cake",
+      "image": "assets/red-velvet-cake.png",
+      "weights": [
+        {"label": "½ kg", "price": 500},
+        {"label": "1 kg", "price": 950}
+      ],
+      "illustrative": true
+    },
+    {
+      "id": "normal-choco",
+      "name": "Normal Chocolate Cake",
+      "image": "assets/normal-choco-cake.png",
+      "weights": [
+        {"label": "½ kg", "price": 200},
+        {"label": "1 kg", "price": 350},
+        {"label": "2 kg", "price": 690},
+        {"label": "2 kg Steps Cake", "price": 800}
+      ],
+      "illustrative": true
+    },
+    {
+      "id": "cool-choco",
+      "name": "Cool Chocolate Cake",
+      "image": "assets/cool-choco-cake.png",
+      "weights": [
+        {"label": "½ kg", "price": 400},
+        {"label": "1 kg", "price": 750},
+        {"label": "2 kg", "price": 1450},
+        {"label": "2 kg Steps Cake", "price": 1550}
+      ],
+      "illustrative": true
+    }
+  ]
+}
