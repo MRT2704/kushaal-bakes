@@ -84,8 +84,8 @@ assert(html.includes('fetch('), 'HTML loads cake data via fetch()');
 
 // ===== Test 7: Phone numbers NOT redacted =====
 console.log('\n--- Phone Numbers ---');
-assert(bakery.phone1.href === 'tel:+918074117710', 'Phone 1 click-to-call href is correct');
-assert(bakery.phone2.href === 'tel:+919391523823', 'Phone 2 click-to-call href is correct');
+assert(bakery.phone1.href === 'tel:+918074117710', 'Phone 1 click-to-call href is full digits');
+assert(bakery.phone2.href === 'tel:+919392337710', 'Phone 2 click-to-call href is full digits');
 assert(!bakery.phone1.href.includes('****'), 'Phone 1 href has no redaction');
 assert(!bakery.phone2.href.includes('****'), 'Phone 2 href has no redaction');
 assert(!html.includes('****'), 'No redacted phone numbers in HTML');

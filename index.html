@@ -129,6 +129,7 @@
       font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
     }
     .form-hint { font-size: 0.7rem; color: var(--light-brown); margin-top: 0.15rem; }
+    .approval-banner { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem; text-align: center; margin-bottom: 0.75rem; }
     @media (max-width: 480px) {
       .header h1 { font-size: 1.15rem; }
       .container { padding: 0.75rem 0.5rem 4rem; }
@@ -142,6 +143,7 @@
   </header>
 
   <main class="container">
+    <div id="approval-banner" class="approval-banner"></div>
     <section id="home-screen" class="screen active">
       <p style="text-align: center; margin-bottom: 0.75rem;">Pick a cake and order via WhatsApp — no app needed!</p>
       <div class="cake-grid" id="cake-grid" role="list">
@@ -223,7 +225,7 @@
     <div class="bakery-address" id="bakery-address">Bhimadole, West Godavari, Andhra Pradesh 534425</div>
     <div class="contact-links">
       <a href="tel:+918074117710" class="call-btn" id="phone-link-1">Call</a>
-      <a href="tel:+919391523823" class="call-btn" id="phone-link-2" style="display: none;">Call</a>
+      <a href="tel:+919392337710" class="call-btn" id="phone-link-2" style="display: none;">Call</a>
       <a href="#" class="whatsapp-btn" id="whatsapp-link" target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
   </footer>
@@ -262,6 +264,11 @@
       document.getElementById('whatsapp-link').href = 'https://wa.me/' + BAKERY.whatsappNumber;
 
       renderCakes();
+
+      // Show price-approval banner
+      if (BAKERY.priceApproval) {
+        document.getElementById('approval-banner').textContent = '\u26a0 ' + BAKERY.priceApproval;
+      }
     }
 
     function renderCakes() {
